@@ -1,8 +1,8 @@
 {
   "name": "task-app-nodejs-project",
   "version": "1.0.0",
-  "description": "task nodejs project",
-  "main": "index.js",
+  "description": "",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -10,10 +10,14 @@
     "type": "git",
     "url": "git+https://github.com/tarunraghav226/task-app-nodejs-project.git"
   },
-  "author": "tarun",
+  "author": "",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/tarunraghav226/task-app-nodejs-project/issues"
   },
-  "homepage": "https://github.com/tarunraghav226/task-app-nodejs-project#readme"
+  "homepage": "https://github.com/tarunraghav226/task-app-nodejs-project#readme",
+  "dependencies": {
+    "express": "^4.18.2",
+    "nodemon": "^2.0.20"
+  }
 }
