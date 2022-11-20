@@ -19,5 +19,17 @@ mongodbClient.connect(
             name: "Tarun",
             age: 22
         })
+
+        db.collection("users")
+            .findOne({
+                _id: new mongodb.ObjectId("636404d998c80a0620871bdc")
+            }, (error, user)=>{
+                if(error){
+                    console.log("Not able to fetch user")
+                    return
+                }
+                console.log("Your result -->")
+                console.log(user)
+            })
     }
 )
