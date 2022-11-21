@@ -48,5 +48,18 @@ mongodbClient.connect(
         }).catch((err)=>{
             console.log(err)
         })
+
+
+        const deletePromise = db.collection("users")
+                .deleteMany(
+                    {
+                        name: "Tarun"
+                    }
+                )
+        deletePromise.then((response)=>{
+            console.log(response)
+        }).catch((err)=>{
+            console.log(err)
+        })
     }
 )
