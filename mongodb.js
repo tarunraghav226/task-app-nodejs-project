@@ -31,5 +31,22 @@ mongodbClient.connect(
                 console.log("Your result -->")
                 console.log(user)
             })
+
+        const updatePromise = db.collection("users")
+                .updateOne(
+                    {
+                        _id: new mongodb.ObjectId("636404d998c80a0620871bdc")
+                    },
+                    {
+                        $set: {
+                            name: "tarun_updated"
+                        }
+                    }
+                )
+        updatePromise.then((response)=>{
+            console.log(response)
+        }).catch((err)=>{
+            console.log(err)
+        })
     }
 )
