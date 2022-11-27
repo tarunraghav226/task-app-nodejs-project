@@ -1,4 +1,5 @@
 const mongoose = require("mongoose")
+const validator = require("validator")
 
 const connectionURL = "mongodb://127.0.0.1:27017"
 
@@ -18,12 +19,22 @@ const User = mongoose.model('User', {
                 throw new Error("Age must be a positiv e number")
             }
         }
+    },
+    email: {
+        required: true,
+        type: String,
+        validate(value){
+            if(!validator.isEmail(value)){
+                throw new Error("Invalid email")
+            }
+        }
     }
 })
 
 const me = new User({
     name: "Tarun",
-    age: -22
+    age: 22,
+    email: "traun"
 })
 
 me.save().then(()=>{
