@@ -11,39 +11,39 @@ app.use(express.json())
 const port = process.env.PORT || 3000
 
 
-app.post("/users", (req, res)=>{
+app.post("/users", async (req, res)=>{
     const user = new User(req.body)
-    user.save().then(()=>{
+    try{
+        await user.save()
         return res.send({
             status: "success",
             data: user
         })
-    }).catch(()=>{
+    }catch(e){
         return res
         .send({
             status: "failure",
             data: []
         })
-    })
+    }
 })
 
-app.get("/users", (req, res) =>{
-    User.find({})
-            .then((users) => {
-                return res.send(users)
-            })
-            .catch((err)=>{
-                return res.send({
-                    status: "failure",
-                    data: "fail"
-                })
-            })
+app.get("/users", async (req, res) =>{
+    try{
+        const users = User.find({})
+        return res.send(users)
+    }catch(e){
+        return res.send({
+            status: "failure",
+            data: "fail"
+        })
+    }
 })
 
-app.get("/users/:id", (req, res) =>{
+app.get("/users/:id", async (req, res) =>{
     const _id = req.params.id
-    User.findOne({_id})
-    .then((user) => {
+    try{
+        const user = User.findOne({_id})
         if(!user){
             return res.status(404).send({
                 status: "failure",
@@ -51,14 +51,12 @@ app.get("/users/:id", (req, res) =>{
             })
         }
         return res.send(user)
-    })
-    .catch((err)=>{
-        console.log(err)
+    } catch (e){
         return res.send({
             status: "failure",
             data: null
         })
-    })
+    }
 })
 
 app.listen(port, ()=>{
