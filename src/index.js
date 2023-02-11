@@ -81,6 +81,27 @@ app.patch("/users/:id", async (req, res) => {
     }
 })
 
+app.delete("/users/:id", async (req, res) => {
+    try{
+        const deletedUser = await User.findByIdAndDelete(req.params.id)
+        if(!deletedUser){
+            return res.status(404).send({
+                status: "failure",
+                data: null
+            })
+        }
+        return res.status(200).send({
+            status: "success",
+            message: "User deleted succesfully"
+        })
+    }catch(e){
+        return res.status(400).send({
+            status: "failure",
+            message: e
+        })
+    }
+})
+
 app.listen(port, ()=>{
         console.log(`Server is up and running on port ${port}`)
     }
