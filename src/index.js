@@ -43,7 +43,7 @@ app.get("/users", async (req, res) =>{
 app.get("/users/:id", async (req, res) =>{
     const _id = req.params.id
     try{
-        const user = User.findOne({_id})
+        const user = await User.findOne({_id})
         if(!user){
             return res.status(404).send({
                 status: "failure",
