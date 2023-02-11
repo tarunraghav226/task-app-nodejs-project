@@ -59,6 +59,28 @@ app.get("/users/:id", async (req, res) =>{
     }
 })
 
+app.patch("/users/:id", async (req, res) => {
+    try{
+        const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {new: true, runValidators: true})
+        if(!updatedUser){
+            return res.status(404).send({
+                status: "failure",
+                data: null
+            })
+        }
+
+        return res.status(200).send({
+            status: "success",
+            data: updatedUser
+        })
+    }catch(e){
+        return res.status(400).send({
+            status: "failure",
+            message: e
+        })
+    }
+})
+
 app.listen(port, ()=>{
         console.log(`Server is up and running on port ${port}`)
     }
