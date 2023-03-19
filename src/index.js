@@ -2,9 +2,9 @@ const express = require("express")
 const userRoute = require("./routes/userRoutes")
 
 const app = express()
-app.use(userRoute)
 
 app.use(express.json())
+app.use(userRoute)
 
 const port = process.env.PORT || 3000
 

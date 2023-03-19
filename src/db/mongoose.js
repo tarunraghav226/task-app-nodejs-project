@@ -1,7 +1,8 @@
 const mongoose = require("mongoose")
 
-const connectionURL = "mongodb://127.0.0.1:27017"
+const password = encodeURIComponent("47vQ018AxJo2PABH")
+const connectionURL = `mongodb+srv://tarunraghav226:${password}@cluster0.cpjyn.mongodb.net/task-manager-api?retryWrites=true&w=majority`
 
-mongoose.connect(connectionURL+"/task-manager-api", {
+mongoose.connect(connectionURL, {
     useNewUrlParser: true
 })
