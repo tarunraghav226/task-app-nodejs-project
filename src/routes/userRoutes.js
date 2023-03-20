@@ -57,10 +57,10 @@ userRoute.patch("/users/:id", async (req, res) => {
     try{
         const updates = Object.keys(req.body)
         const allowedUpdateKeys = ["name", "email", "password", "age"]
-        const isValidUpdate = updates.forEach((updateKey)=>{allowedUpdateKeys.includes(updateKey)})
+        const isValidUpdate = updates.every((updateKey)=>allowedUpdateKeys.includes(updateKey))
 
         if(!isValidUpdate){
-            return req.status(400).send({error: "Invalid update request"})
+            return res.status(400).send({error: "Invalid update request"})
         }
 
         const user = await User.findById(req.params.id)
@@ -69,17 +69,10 @@ userRoute.patch("/users/:id", async (req, res) => {
         })
         await user.save()
         // const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {new: true, runValidators: true})
-        
-        if(!updatedUser){
-            return res.status(404).send({
-                status: "failure",
-                data: null
-            })
-        }
 
         return res.status(200).send({
             status: "success",
-            data: updatedUser
+            data: user
         })
     }catch(e){
         return res.status(400).send({
