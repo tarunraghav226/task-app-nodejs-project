@@ -104,4 +104,14 @@ userRoute.delete("/users/:id", async (req, res) => {
     }
 })
 
+userRoute.post("/users/login", async (req, res)=>{
+    try{
+        const user = await User.findUserByCredentials(req.body.email, req.body.password)
+        res.send(user)
+    }catch(e){
+        console.log(e)
+        res.status(400).send()
+    }
+})
+
 module.exports = userRoute
