@@ -75,6 +75,7 @@ userRoute.patch("/users/:id", async (req, res) => {
             data: user
         })
     }catch(e){
+        console.log(e)
         return res.status(400).send({
             status: "failure",
             message: e
