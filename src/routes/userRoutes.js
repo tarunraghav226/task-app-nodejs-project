@@ -9,9 +9,10 @@ userRoute.post("/users", async (req, res)=>{
     const user = new User(req.body)
     try{
         await user.save()
+        const token = await user.generateAuthToken()
         return res.send({
             status: "success",
-            data: user
+            data: {user, token}
         })
     }catch(e){
         return res
@@ -107,7 +108,8 @@ userRoute.delete("/users/:id", async (req, res) => {
 userRoute.post("/users/login", async (req, res)=>{
     try{
         const user = await User.findUserByCredentials(req.body.email, req.body.password)
-        res.send(user)
+        const token = await user.generateAuthToken()
+        res.send({user, token})
     }catch(e){
         console.log(e)
         res.status(400).send()
