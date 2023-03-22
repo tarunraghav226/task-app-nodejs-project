@@ -1,6 +1,7 @@
 const mongoose = require("../db/mongoose")
 const express = require("express")
 const User = require("../models/User")
+const auth = require("../middlewares/auth")
 const { ObjectId } = require("mongodb")
 
 const userRoute = express.Router()
@@ -23,16 +24,8 @@ userRoute.post("/users", async (req, res)=>{
     }
 })
 
-userRoute.get("/users", async (req, res) =>{
-    try{
-        const users = User.find({})
-        return res.send(users)
-    }catch(e){
-        return res.send({
-            status: "failure",
-            data: "fail"
-        })
-    }
+userRoute.get("/users/me", auth, async (req, res) =>{
+    return res.send(req.user)
 })
 
 userRoute.get("/users/:id", async (req, res) =>{
