@@ -18,20 +18,21 @@ taskRoute.post('/tasks', auth, async (req, res) => {
     }
 })
 
-taskRoute.get('/tasks', async (req, res) => {
+taskRoute.get('/tasks', auth, async (req, res) => {
     try {
-        const tasks = await Task.find({})
-        res.send(tasks)
+        await req.user.populate("tasks")
+        res.send({tasks: req.user.tasks})
     } catch (e) {
+        console.log(e)
         res.status(500).send()
     }
 })
 
-taskRoute.get('/tasks/:id', async (req, res) => {
+taskRoute.get('/tasks/:id', auth, async (req, res) => {
     const _id = req.params.id
 
     try {
-        const task = await Task.findById(_id)
+        const task = await Task.findOne({_id, owner: req.user._id})
 
         if (!task) {
             return res.status(404).send()
@@ -39,11 +40,12 @@ taskRoute.get('/tasks/:id', async (req, res) => {
 
         res.send(task)
     } catch (e) {
+        console.log(e)
         res.status(500).send()
     }
 })
 
-taskRoute.patch('/tasks/:id', async (req, res) => {
+taskRoute.patch('/tasks/:id', auth, async (req, res) => {
     const updates = Object.keys(req.body)
     const allowedUpdates = ['description', 'completed']
     const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
@@ -53,14 +55,14 @@ taskRoute.patch('/tasks/:id', async (req, res) => {
     }
 
     try {
-        const task = await Task.findById(req.params.id)
-
-        updates.forEach((update) => task[update] = req.body[update])
-        await task.save()
+        const task = await Task.findOne({ _id: req.params.id, owner: req.user.id})
 
         if (!task) {
             return res.status(404).send()
         }
+
+        updates.forEach((update) => task[update] = req.body[update])
+        await task.save()
 
         res.send(task)
     } catch (e) {
@@ -68,9 +70,9 @@ taskRoute.patch('/tasks/:id', async (req, res) => {
     }
 })
 
-taskRoute.delete('/tasks/:id', async (req, res) => {
+taskRoute.delete('/tasks/:id', auth, async (req, res) => {
     try {
-        const task = await Task.findByIdAndDelete(req.params.id)
+        const task = await Task.findByIdAndDelete({_id: req.params.id, owner: req.user._id})
 
         if (!task) {
             res.status(404).send()
