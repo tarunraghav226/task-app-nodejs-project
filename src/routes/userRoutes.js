@@ -79,13 +79,7 @@ userRoute.patch("/users/me", auth, async (req, res) => {
 
 userRoute.delete("/users/me", auth, async (req, res) => {
     try{
-        const deletedUser = await User.findByIdAndDelete(req.user._id)
-        if(!deletedUser){
-            return res.status(404).send({
-                status: "failure",
-                data: null
-            })
-        }
+        await req.user.remove()
         return res.status(200).send({
             status: "success",
             message: "User deleted succesfully"
