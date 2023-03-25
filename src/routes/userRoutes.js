@@ -28,7 +28,7 @@ userRoute.get("/users/me", auth, async (req, res) =>{
     return res.send(req.user)
 })
 
-userRoute.get("/users/:id", async (req, res) =>{
+userRoute.get("/users/:id", auth, async (req, res) =>{
     const _id = req.params.id
     try{
         const user = await User.findOne({_id})
@@ -47,7 +47,7 @@ userRoute.get("/users/:id", async (req, res) =>{
     }
 })
 
-userRoute.patch("/users/:id", async (req, res) => {
+userRoute.patch("/users/me", auth, async (req, res) => {
     try{
         const updates = Object.keys(req.body)
         const allowedUpdateKeys = ["name", "email", "password", "age"]
@@ -57,7 +57,7 @@ userRoute.patch("/users/:id", async (req, res) => {
             return res.status(400).send({error: "Invalid update request"})
         }
 
-        const user = await User.findById(req.params.id)
+        const user = req.user
         updates.forEach((updateKey)=>{
             user[updateKey] = req.body[updateKey]
         })
@@ -77,9 +77,9 @@ userRoute.patch("/users/:id", async (req, res) => {
     }
 })
 
-userRoute.delete("/users/:id", async (req, res) => {
+userRoute.delete("/users/me", auth, async (req, res) => {
     try{
-        const deletedUser = await User.findByIdAndDelete(req.params.id)
+        const deletedUser = await User.findByIdAndDelete(req.user._id)
         if(!deletedUser){
             return res.status(404).send({
                 status: "failure",
