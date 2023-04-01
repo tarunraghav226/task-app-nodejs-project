@@ -159,4 +159,15 @@ userRoute.delete("/users/me/avatar", auth, async (req, res)=>{
     res.status(400).send({error: error.message})
 })
 
+userRoute.get("/users/:id/avatar", async (req, res)=>{
+    const user = await User.findById(req.params.id)
+    if(!user || !user.avatar){
+        throw new Error("Avatar not found")
+    }
+    res.set("Content-Type", "image/jpg")
+    res.send(user.avatar)
+}, (error, req, res, next)=>{
+    res.status(400).send({error: error.message})
+})
+
 module.exports = userRoute
