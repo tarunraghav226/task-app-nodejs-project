@@ -3,6 +3,7 @@ const express = require("express")
 const User = require("../models/User")
 const auth = require("../middlewares/auth")
 const { ObjectId } = require("mongodb")
+const multer = require("multer")
 
 const userRoute = express.Router()
 
@@ -127,6 +128,13 @@ userRoute.post("/users/logout/all", auth, async (req, res) => {
         console.log(error)
         res.status(500).send()
     }
+})
+
+const upload = multer({
+    dest: 'avatars'
+})
+userRoute.post("/users/me/avatar", upload.single("avatar"), (req, res)=>{
+    res.send()
 })
 
 module.exports = userRoute
