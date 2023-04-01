@@ -131,10 +131,24 @@ userRoute.post("/users/logout/all", auth, async (req, res) => {
 })
 
 const upload = multer({
-    dest: 'avatars'
+    // dest: 'avatars', // if we dont give dest ket than we can access file buffer in route
+    limits:{
+        fileSize: 1000000
+    },
+    fileFilter(req, file, callback){
+        if(!file.originalname.match(/\.(jpg|jpeg|png)$/)){
+            return callback(new Error("Please  upload a image file"))
+        }
+        return callback(undefined, true)
+    }
 })
-userRoute.post("/users/me/avatar", upload.single("avatar"), (req, res)=>{
+
+userRoute.post("/users/me/avatar", auth, upload.single("avatar"), async (req, res)=>{
+    req.user.avatar = req.file.buffer
+    await req.user.save()
     res.send()
+}, (error, req, res, next)=>{
+    res.status(400).send({error: error.message})
 })
 
 module.exports = userRoute
